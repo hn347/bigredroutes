@@ -24,8 +24,7 @@ body {font-size:16px;}
   <div class="w3-bar-block">
     <a href="#" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Home</a> 
     <a href="#background" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Background</a> 
-    <a href="#design" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Design</a> 
-    <a href="#functionality" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Functionality</a> 
+    <a href="#design" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Design</a>
     <a href="#hardware" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Hardware</a> 
     <a href="#software" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Software</a>
   </div>
@@ -75,15 +74,7 @@ body {font-size:16px;}
       (North to South), and a red light signifying that the bus is moving inbound (South to North). In total, we tracked 89 bus stops. 
       With 89 stops to light up, we used 89 cuts of 1mm fiber optic cable to transfer light from an LED pixel on the matrix panel to each hole on the map that represents one bus stop. 
       To secure each fiber optic cable over its respective LED pixel, we 3D-printed a 5mm tall board with 1mm diameter holes to hold the cables on top of the LED matrix.
-    </p>
-    
-  </div>
-
-  <!-- Functionality -->
-  <div class="w3-container" id="functionality" style="margin-top:75px">
-    <h1 class="w3-xxxlarge w3-text-red"><b>Functionality.</b></h1>
-    <hr style="width:50px;border:5px solid red" class="w3-round">
-    <p>
+      
       Big Red Routes provides users with two different modes: "Track a Route" and "Find a Route". In "Track a Route" mode, users can choose between each of the 3 routes to track. 
       For example, if the user clicks the button for the route 30, only buses for the 30 will be displayed on the map. In "Find a Route" mode, users select a start and end destination, and 
       an optimal path that prioritizes least transfers and least stops is lit up on the map. At startup, active buses for all 3 routes are automatically displayed on the map. A quit option 
