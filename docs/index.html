@@ -17,7 +17,10 @@ table th {
 </style>
 </head>
 <body>
-
+.code-red {
+  color: #e91e63;
+  font-family: monospace;
+}
 <!-- Sidebar/menu -->
 <nav class="w3-sidebar w3-red w3-collapse w3-top w3-large w3-padding" style="z-index:3;width:300px;font-weight:bold;" id="mySidebar"><br>
   <a href="javascript:void(0)" onclick="w3_close()" class="w3-button w3-hide-large w3-display-topleft" style="width:100%;font-size:22px">Close Menu</a>
@@ -281,11 +284,13 @@ table th {
       <h4>
         TCAT API Polling
       </h4>
-      The software polls TCAT's live vehicle feed every 5 seconds to get updated bus information. We use the TCAT GTFS-realtime feed, 
-      which returns data such as the bus route, trip ID, current stop ID, vehicle ID, current status, occupancy, and timestamp. 
-      The program filters this data so we only track the routes relevant to our project. In the background, a polling loop repeatedly 
-      fetches this vehicle data and updates the current state of each bus. This lets the LED matrix and PiTFT display stay updated as 
-      buses move from stop to stop. The polling runs in its own thread so the rest of the system, like the GUI and buttons, can keep working at the same time.
+        The software polls TCAT's live vehicle feed every 5 seconds to get updated bus information. At startup, our code first calls <code class="code-red">load_gtfs_static_data()</code>, 
+      which loads the GTFS static files such as <code class="code-red">stops.txt</code>, <code class="code-red">trips.txt</code>, and <code class="code-red">stop_times.txt</code> to create 
+      dictionaries for route IDs, trip IDs, stop IDs, stop names, and directions. Then, the program repeatedly calls <code class="code-red">fetch_vehicle_feed()</code> to get the live TCAT
+      vehicle data, which returns information such as the bus route, trip ID, current stop ID, vehicle ID, current status, occupancy, and timestamp. The program filters this data so we only 
+      track the routes relevant to our project using <code class="code-red">TARGET_ROUTES</code>. It also uses <code class="code-red">normalize_direction()</code> to label each bus as inbound, 
+      outbound, or unknown, since different routes use different direction names. Finally, <code class="code-red">build_bus_snapshot()</code> combines the live bus data with the stop-to-pixel
+      map so the LED matrix and PiTFT display can show the correct bus location. This polling runs in its own thread so the rest of the system, like the GUI and buttons, can keep working at the same time.
       <h4>
         Dictionary Storage and LED Pixel Mapping
       </h4>
