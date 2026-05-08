@@ -334,15 +334,28 @@ table th {
     <h1 class="w3-xxxlarge w3-text-red"><b>Results & Conclusions.</b></h1>
     <hr style="width:50px;border:5px solid red" class="w3-round">
     <p>
-      Evaluate your outcomes:
-      - Did your project perform as intended?
-      - Did you meet your original goals and specifications?
-
-      Summarize key takeaways:
-      - What worked well?
-      - What did not work as expected, and why?
+      The project performed as intended because the final system was able to display real-time TCAT bus information on the physical 3D-printed map using LEDs. 
+      It met the original goals from our project proposal by tracking buses for selected TCAT routes and showing their locations in an interactive way. 
+      We also went beyond the original proposal by adding extra features, including GPIO button controls, a “Find a Route” mode, and audio announcements. 
+      Most of the changes we made were not major changes to the project idea, but improvements that built on the original concept and made the system more useful and interactive. 
+      The only main adjustment was changing some of the routes we decided to use, but the overall purpose of the project stayed the same.
     </p>
-    
+      One aspect that worked well was that the hardware and software worked together successfully. 
+      The Raspberry Pi, piTFT screen, LED matrix, buttons, and fiber optic cables were able to be connected into one working system. 
+      The real-time bus data is updated about every 10 seconds, and the button controls felt responsive because the button polling was fast with a small debounce delay.
+      The 3D-printed map and fiber optic cable setup also worked well after testing different designs and hole sizes. 
+      Another part that worked well was organizing the code into separate files, such as files for the GUI, LED matrix, bus tracking, button controls, audio, and route data. 
+      This made the project easier to manage compared to having everything in one large file.
+    <p>
+      <p>
+        Some parts did not work as expected at first and required troubleshooting. The touchscreen was not very responsive, so we decided that using physical GPIO buttons was more reliable for user interaction. 
+        Route 92 also caused issues because it does not always have live data during the day, so we had to account for that by using recorded data when live data was unavailable. 
+        The “Find a Route” feature was also challenging because we had to manually create new stop dictionaries and test different route combinations. 
+        Since the dictionaries were made by hand, we found that some stops were missing and had to be fixed. 
+        Overall, the main challenges came from combining many different parts of the system, but most of them were solved through testing, debugging, and refining the design.
+      </p>
+      
+    </p>
   </div>
 
   <div class="w3-row-padding">
