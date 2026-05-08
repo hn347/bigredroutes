@@ -294,42 +294,48 @@ table th {
       <h4>
         Dictionary Storage and LED Pixel Mapping
       </h4>
-      A major part of the project is storing bus stop information in dictionaries. Each route has its own dictionary that maps a TCAT stop ID to the stop name 
-      and the matching pixel location (x,y) on the LED matrix. The software combines these route dictionaries into global lookup tables. 
-      One dictionary maps each (route_id, stop_id) pair to a stop name, and another maps each (route_id, stop_id) pair to a pixel coordinate. 
-      When live TCAT data says a bus is at a certain stop, the program uses the bus's route ID and stop ID to look up the correct LED pixel. Then it lights that pixel on the matrix.
+      A major part of the project is storing bus stop information in dictionaries. Each route has its own dictionary, such as <code class="code-red">ROUTE_30_STOP_DATA</code>, <code class="code-red">ROUTE_81_STOP_DATA</code>, 
+      and <code class="code-red">ROUTE_92_STOP_DATA</code>, that maps a TCAT stop ID to the stop name and the matching pixel location <code class="code-red">(x, y)</code> on the LED matrix. The software combines these route 
+      dictionaries into <code class="code-red">ROUTE_STOP_DATA_BY_ROUTE</code>, which lets the program look up stop data based on the bus route. We also created separate dictionaries for the route-finding mode, including 
+      <code class="code-red">INBOUND_STOP_LOOKUP</code>, <code class="code-red">OUTBOUND_STOP_LOOKUP</code>, and <code class="code-red">TRANSFER_STOP_LOOKUP</code>, so the user can choose a start and end stop and the program 
+      can find possible routes or transfers. When live TCAT data says a bus is at a certain stop, the program uses the bus's route ID and stop ID to look up the correct stop name and LED pixel. Then it lights that pixel on the matrix.
       <h4>
         LED Matrix Control
       </h4>
-      The LED matrix is controlled using the rgbmatrix library. We created a BusLEDMatrix class that handles clearing the matrix, setting individual pixels, converting color values, 
-      and redrawing the display. The matrix stores active pixels in a dictionary so it knows which locations should currently be lit. 
-      Different modes use the LED matrix in different ways. In route display mode, the matrix lights up the current locations of buses on the selected route. 
-      In trip-planning mode, it can highlight a selected stop, lock in a start or end stop, and then light up the full planned route after the route is found.
+      The LED matrix is controlled using the <code class="code-red">rgbmatrix</code> library. We created a <code class="code-red">BusLEDMatrix</code> class that sets up the matrix with <code class="code-red">RGBMatrixOptions()</code>, 
+      including the number of rows and columns, brightness, GPIO slowdown, PWM bits, RGB sequence, and the <code class="code-red">adafruit-hat</code> hardware mapping. The class handles clearing the matrix with <code class="code-red">clear()</code>, 
+      setting individual pixels with <code class="code-red">set_pixel()</code>, converting color values with <code class="code-red">color_tuple()</code>, and redrawing the display with <code class="code-red">redraw_locked()</code>. The matrix stores 
+      active pixels in an <code class="code-red">active_pixels</code> dictionary so it knows which locations should currently be lit, and it uses a <code class="code-red">threading.Lock()</code> so different parts of the program do not update the matrix 
+      at the same time. Different modes use the LED matrix in different ways. In route display mode, the matrix lights up the current locations of buses on the selected route. In trip-planning mode, it can highlight a selected stop, lock in a start or end stop, 
+      and then light up the full planned route after the route is found.
       <h4>
         Audio Announcements
       </h4>
-      We added a separate AudioAnnouncer class to vocalize when buses move. When a bus arrives at a stop, the program can generate a spoken message with the route number, bus ID, stop name, and direction. 
-      The messages are placed into a queue and spoken one at a time using espeak. The audio system runs in a background thread so announcements do not freeze the rest of the program.
+      We added a separate <code class="code-red">AudioAnnouncer</code> class to say when buses move. When a bus arrives at a stop, the program uses <code class="code-red">announce_bus_arrival()</code> to generate a spoken message with the route number, bus ID, stop name,
+      and direction. This message is then passed into <code class="code-red">announce()</code>, which places it into a <code class="code-red">message_queue</code> using Python’s <code class="code-red">queue</code> library. The audio system runs in a background thread created w
+      ith <code class="code-red">threading.Thread()</code>, so announcements do not freeze the rest of the program. Inside <code class="code-red">_audio_loop()</code>, messages are taken from the queue one at a time and spoken using <code class="code-red">espeak</code> through 
+      <code class="code-red">subprocess.run()</code>. We also included <code class="code-red">set_enabled()</code> to turn announcements on or off and <code class="code-red">stop()</code> to safely stop the audio thread when the program exits.
       <h4>
         GPIO Button Control
       </h4>
-      The physical buttons are handled using the RPi.GPIO library. We used four buttons: white, green, blue, and red. Each button has a different role depending on the current screen. 
-      For example, the white button is used to select or go back, while the green, blue, and red buttons can select routes or scroll through stops. 
-      The GPIO button loop keeps track of the current screen, selected mode, selected route, trip direction, start stop, and end stop. Button presses send commands to the GUI through a 
-      queue and also send commands to the LED matrix through another queue. This keeps the button logic separate from the display logic, which makes the program easier to manage.
+      The physical buttons are handled using the <code class="code-red">RPi.GPIO</code> library. We used four buttons: white, green, blue, and red. The <code class="code-red">setup_gpio()</code> function sets these pins as inputs with pull-up resistors, and the <code class="code-red">gpio_button_loop()</code> function keeps checking for button presses. 
+      Each button has a different role depending on the current screen. For example, the white button is used to select or go back, while the green, blue, and red buttons can select routes or scroll through stops. The GPIO button loop keeps track of the <code class="code-red">current_screen</code>, selected mode, selected route, trip direction, start stop, 
+      and end stop. Button presses send commands to the GUI through <code class="code-red">screen_command_queue</code> and also send commands to the LED matrix through <code class="code-red">led_route_queue</code>. This keeps the button logic separate from the display logic, which makes the program easier to manage.
       <h4>
         Find a Route Algorithm
       </h4>
-      The “Find a Route” feature lets the user choose a starting stop and an ending stop then finds the best route between them, prioritizing the path with the fewest transfers. 
-      To do this, each bus stop is represented as a node in a graph. Stops on the same route are connected by “ride” edges, and valid transfer stops are connected by “transfer” edges.
-      The algorithm searches through possible paths from the starting stop to the ending stop. Each path is scored based on the number of transfers, number of ride steps, and total path length. 
-      The best route is the one with the lowest score, meaning it uses the fewest transfers first, then the shortest ride path if there is a tie.
-      Once the best path is found, the program returns the route segments and pixel locations. Those pixels are then lit on the LED matrix so the user can physically see the route they should take on the map.
+      The “Find a Route” feature lets the user choose a starting stop and an ending stop, then finds the best route between them by calling <code class="code-red">quick_find_from_entries()</code>, which passes the selected stops into <code class="code-red">find_best_route()</code>. To do this, each bus stop is represented as a <code class="code-red">StopNode</code> in a graph. 
+      The code uses <code class="code-red">_build_nodes_by_route()</code> to create the stop nodes and <code class="code-red">_build_graph()</code> to connect stops on the same route with “ride” edges and valid transfer stops with “transfer” edges. The algorithm searches through possible paths from the starting stop to the ending stop using <code class="code-red">_search_best_path()</code>, 
+      which uses recursive backtracking to try different route options. Each path is scored with <code class="code-red">_score()</code> based on the number of transfers, number of ride steps, and total path length. The best route is the one with the lowest score, meaning it uses the fewest transfers first, then the shortest ride path if there is a tie. Once the best path is found, the program 
+      returns the route segments and pixel locations, and those pixels are then lit on the LED matrix so the user can physically see the route they should take on the map.
       <h4>
         PiTFT GUI
       </h4>
-      The PiTFT interface is built using pygame. The GUI displays the home screen, route selection screen, trip finder screen, stop picker screens, selected trip summary, and live bus information. 
-      It also shows specific information for each active bus being displayed, such as bus status, last stop, destination, direction, and occupancy.
+      <p>
+  The PiTFT interface is built using <code class="code-red">pygame</code>. The GUI displays the home screen, route selection screen, trip finder screen, stop picker screens, selected trip summary, and live bus information using functions like <code class="code-red">draw_home_screen()</code>, <code class="code-red">draw_route_selection_screen()</code>, <code class="code-red">draw_trip_finder_screen()</code>, 
+        <code class="code-red">draw_trip_stop_picker_screen()</code>, and <code class="code-red">draw_trip_selection_summary_screen()</code>. The main <code class="code-red">pitft_screen_loop()</code> function waits for commands from <code class="code-red">screen_command_queue</code> and updates the correct screen based on the user’s button selections. It also shows specific information for each active bus 
+        being displayed by calling <code class="code-red">get_route_gui_snapshot()</code> and using <code class="code-red">draw_route_bus_screen()</code> to display the bus status, last stop, destination, direction, and occupancy. To make the route screen easier to use, <code class="code-red">choose_next_bus_id()</code> lets the user cycle through buses, while <code class="code-red">keep_selected_bus_valid()</code> 
+        makes sure the selected bus still exists when the live data updates.
     </p>
   </div>
 
