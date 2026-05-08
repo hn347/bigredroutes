@@ -351,7 +351,7 @@ table th {
         Some parts did not work as expected at first and required troubleshooting. The touchscreen was not very responsive, so we decided that using physical GPIO buttons was more reliable for user interaction. 
         Route 92 also caused issues because it does not always have live data during the day, so we had to account for that by using recorded data when live data was unavailable. 
         The “Find a Route” feature was also challenging because we had to manually create new stop dictionaries and test different route combinations. 
-        Since the dictionaries were made by hand, we found that some stops were missing and had to be fixed. 
+        Since the dictionaries were made by hand, we found that some stops that were both inbound and outbound stops were missing and had to be fixed. 
         Overall, the main challenges came from combining many different parts of the system, but most of them were solved through testing, debugging, and refining the design.
       </p>
       
@@ -388,7 +388,18 @@ table th {
     <h1 class="w3-xxxlarge w3-text-red"><b>Future Work.</b></h1>
     <hr style="width:50px;border:5px solid red" class="w3-round">
     <p>
-      Discuss possible extensions or improvements if you had additional time or resources.
+      With additional time and resources, we could improve the project by adding more TCAT routes so the map would be useful for more students and Ithaca residents. 
+      Right now, the project focuses on routes 30, 81, and 92, but adding more routes would make the system feel more complete. With more routes, this would also be a good opportunity to optimize our code. Instead of using lists of dictionaries, we could improve our code by using methods like classes for our bus data. 
+      We could also add labels to the physical map, such as major Cornell buildings, Collegetown, the Commons, and other recognizable locations, so users could understand the map more quickly without needing to already know the stop names.
+    </p>
+    <p>
+      Another improvement would be making the “Find a Route” feature more advanced. Currently, it helps users choose a route based on the starting and ending stops, but with more time, we could connect this mode to the real-time TCAT data. 
+      This would allow the system to show estimated arrival times, whether a bus is currently nearby, and whether walking might be faster than waiting for the bus. 
+      This would make the feature more practical for real use instead of only showing the possible route path.
+    </p>
+    <p>
+      We could also improve the user interface on the piTFT screen. Since the touchscreen was not as reliable, we used physical buttons, which worked better. However, the interface could be made more intuitive by using fewer words, clearer menus, and more visual icons. 
+      This would make it easier for users to navigate the system quickly. The audio announcements could also be improved by using a smoother and more natural-sounding voice, similar to Siri, so the bus information is easier to understand.
     </p>
     
   </div>
