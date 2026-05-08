@@ -23,17 +23,21 @@ body {font-size:16px;}
   </div>
   <div class="w3-bar-block">
     <a href="#" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Home</a> 
-    <a href="#background" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Background</a> 
-    <a href="#design" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Design</a>
+    <a href="#introduction" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Introduction</a> 
+    <a href="#design" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Design & Testing</a>
     <a href="#hardware" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Hardware</a> 
     <a href="#software" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Software</a>
+    <a href="#results" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Results & Conclusions</a>
+    <a href="#future" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Future Work</a>
+    <a href="#code" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Code Appendix</a>
+    <a href="#contribution" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Team Contributions</a>
   </div>
 </nav>
 
 <!-- Top menu on small screens -->
 <header class="w3-container w3-top w3-hide-large w3-red w3-xlarge w3-padding">
   <a href="javascript:void(0)" class="w3-button w3-red w3-margin-right" onclick="w3_open()">☰</a>
-  <span>Company Name</span>
+  <span>Big Red Routes</span>
 </header>
 
 <!-- Overlay effect when opening sidebar on small screens -->
@@ -45,27 +49,34 @@ body {font-size:16px;}
   <!-- Header -->
   <div class="w3-container" style="margin-top:80px" id="title">
     <h1 class="w3-jumbo"><b>Big Red Routes</b></h1>
-    <img src="filler_pic.jpeg" style="width:100%" onclick="onClick(this)" alt="filler title pic">
+    <h4 style="color:gray">Selena Zhang (scz6), Helen Ni (hn347)</h4>
+    <h4 style="color:gray">5.9.2026</h4>
+    <!-- <img src="img/filler_pic.jpeg" style="width:100%" onclick="onClick(this)" alt="filler title pic"> -->
+    <iframe width="420" height="345" src="https://www.youtube.com/watch?v=et91Gea6CPk"></iframe>
   </div>
 
 
-  <!-- Background -->
-  <div class="w3-container" id="background" style="margin-top:75px">
-    <h1 class="w3-xxxlarge w3-text-red"><b>Background.</b></h1>
+  <!-- Introduction -->
+  <div class="w3-container" id="introduction" style="margin-top:75px">
+    <h1 class="w3-xxxlarge w3-text-red"><b>Introduction.</b></h1>
     <hr style="width:50px;border:5px solid red" class="w3-round">
     <p>
       Big Red Routes is an interactive TCAT (Tompkins Consolidated Area Transit) bus tracking display designed for the Cornell and Ithaca community. 
-      It uses real-time TCAT bus data to show the current locations of buses on a physical 3D-printed map, specifically for the 
-      routes 30, 81, and 92. Our initial inspiration came from a similar project we saw online for the Manhattan subway system. 
+      Our initial inspiration came from a similar project we saw online for the Manhattan subway system. 
       Because the TCAT is such an essential part of Cornell University's transportation system and students use it daily, 
-      we wanted to create our own version for Ithaca. This is our final project for the Design with Embedded Operating Systems course, 
+      we wanted to create our own version for Ithaca.
+
+      <h4>Objective</h4>
+      The objective of this project was to design a Raspberry Pi-based system that uses real-time TCAT bus data to show the current locations of buses on a physical 3D-printed map. 
+      Out system focuses the 30, 81, and 92 bus routes. We wanted to add creative design through CAD and 3D printing, while also involving embedded softare, electronic hardware, data 
+      scraping, and user interaction. This is our final project for the Design with Embedded Operating Systems course, 
       designing microcontroller-based systems using embedded Linux and debugging solutions on the target Rapsberry Pi microcontroller.
     </p>
   </div>
 
-  <!-- Design -->
+  <!-- Design and Testing -->
   <div class="w3-container" id="design" style="margin-top:75px">
-    <h1 class="w3-xxxlarge w3-text-red"><b>Design.</b></h1>
+    <h1 class="w3-xxxlarge w3-text-red"><b>Design & Testing.</b></h1>
     <hr style="width:50px;border:5px solid red" class="w3-round">
     <p>
       The 12" by 21" map of Ithaca was hand-traced in Figma using vectors. The designs were then exported as an SVG and imported into Fusion to extrude, color, and 3D print. 
@@ -79,6 +90,11 @@ body {font-size:16px;}
       For example, if the user clicks the button for the route 30, only buses for the 30 will be displayed on the map. In "Find a Route" mode, users select a start and end destination, and 
       an optimal path that prioritizes least transfers and least stops is lit up on the map. At startup, active buses for all 3 routes are automatically displayed on the map. A quit option 
       is available to stop the program.
+
+      ADD
+      - Key design iterations and major milestones
+      - Challenges encountered and how you resolved them
+      - Testing procedures and results verifying functionality
     </p>
     
   </div>
@@ -101,7 +117,7 @@ body {font-size:16px;}
   <div class="w3-row-padding">
     <div class="w3-col m4 w3-margin-bottom">
       <div class="w3-light-grey">
-        <img src="hw1.jpeg" alt="hw1" style="width:100%">
+        <img src="img/hw1.jpeg" alt="hw1" style="width:100%">
         <div class="w3-container">
           <!-- <h3>John Doe</h3> -->
           <p class="w3-opacity">caption</p>
@@ -110,7 +126,7 @@ body {font-size:16px;}
     </div>
     <div class="w3-col m4 w3-margin-bottom">
       <div class="w3-light-grey">
-        <img src="hw2.jpeg" alt="hw2" style="width:100%">
+        <img src="img/hw2.jpeg" alt="hw2" style="width:100%">
         <div class="w3-container">
           <!-- <h3>Jane Doe</h3> -->
           <p class="w3-opacity">caption</p>
@@ -119,7 +135,7 @@ body {font-size:16px;}
     </div>
     <div class="w3-col m4 w3-margin-bottom">
       <div class="w3-light-grey">
-        <img src="hw3.jpeg" alt="hw3" style="width:100%">
+        <img src="img/hw3.jpeg" alt="hw3" style="width:100%">
         <div class="w3-container">
           <!-- <h3>Mike Ross</h3> -->
           <p class="w3-opacity">caption</p>
@@ -186,10 +202,27 @@ body {font-size:16px;}
     </p>
   </div>
 
+
+  <!-- Results and Conclusions -->
+  <div class="w3-container" id="results" style="margin-top:75px">
+    <h1 class="w3-xxxlarge w3-text-red"><b>Results & Conclusions.</b></h1>
+    <hr style="width:50px;border:5px solid red" class="w3-round">
+    <p>
+      Evaluate your outcomes:
+      - Did your project perform as intended?
+      - Did you meet your original goals and specifications?
+
+      Summarize key takeaways:
+      - What worked well?
+      - What did not work as expected, and why?
+    </p>
+    
+  </div>
+
   <div class="w3-row-padding">
     <div class="w3-half w3-margin-bottom">
       <ul class="w3-ul w3-light-grey w3-center">
-        <li class="w3-dark-grey w3-xlarge w3-padding-32">Basic</li>
+        <li class="w3-dark-grey w3-xlarge w3-padding-32">Parts List</li>
         <li class="w3-padding-16">Floorplanning</li>
         <li class="w3-padding-16">10 hours support</li>
         <li class="w3-padding-16">Photography</li>
@@ -207,7 +240,7 @@ body {font-size:16px;}
         
     <div class="w3-half">
       <ul class="w3-ul w3-light-grey w3-center">
-        <li class="w3-red w3-xlarge w3-padding-32">Pro</li>
+        <li class="w3-red w3-xlarge w3-padding-32">References</li>
         <li class="w3-padding-16">Floorplanning</li>
         <li class="w3-padding-16">50 hours support</li>
         <li class="w3-padding-16">Photography</li>
@@ -222,6 +255,34 @@ body {font-size:16px;}
         </li>
       </ul>
     </div>
+  </div>
+
+  <!-- Future Work -->
+  <div class="w3-container" id="future" style="margin-top:75px">
+    <h1 class="w3-xxxlarge w3-text-red"><b>Future Work.</b></h1>
+    <hr style="width:50px;border:5px solid red" class="w3-round">
+    <p>
+      Discuss possible extensions or improvements if you had additional time or resources.
+    </p>
+    
+  </div>
+
+  <!-- Code Appendix -->
+  <div class="w3-container" id="code" style="margin-top:75px">
+    <h1 class="w3-xxxlarge w3-text-red"><b>Code Appendix.</b></h1>
+    <hr style="width:50px;border:5px solid red" class="w3-round">
+    <p>
+      link to github
+    </p>
+    
+  </div>
+
+  <!-- Team Contributions -->
+  <div class="w3-container" id="contribution" style="margin-top:75px">
+    <h1 class="w3-xxxlarge w3-text-red"><b>Team Contributions.</b></h1>
+    <hr style="width:50px;border:5px solid red" class="w3-round">
+    <a href="https://github.com/hn347/bigredroutes">Big Red Routes Github</a>
+    
   </div>
 
 <!-- End page content -->
