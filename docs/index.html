@@ -11,6 +11,10 @@ body,h1,h2,h3,h4,h5 {font-family: "Poppins", sans-serif}
 body {font-size:16px;}
 .w3-half img{margin-bottom:-6px;margin-top:16px;opacity:1;cursor:pointer}
 .w3-half img:hover{opacity:1}
+.code-red {
+  color: #e91e63;
+  font-family: monospace;
+}
 </style>
 </head>
 <body>
@@ -347,7 +351,9 @@ body {font-size:16px;}
   For software testing, we added print statements in different parts of the code to check if the TCAT scraping data was accurate, if the buttons were being detected, if the piTFT was updating, if certain threads were running, and if the audio was working. 
   This was extremely helpful because it let us see whether the system was responding correctly to user input and whether the overall program was behaving as expected. For the Find a Route algorithm, we tested many different starting and ending stops to see if the system 
   handled bus transfers correctly and chose the correct path. Through this testing, we realized that we needed separate inbound and outbound modes so a user would not be able to choose a route that went backwards from their selected stop. We also realized that we needed 
-  to add more dictionaries to handle the route and transfer data correctly. Finally, we tested the full integrated system by running the Raspberry Pi, piTFT, LED matrix, buttons, TCAT data polling, and audio announcements at the same time. Overall, testing each part separately and then testing the full system helped us make the final project more reliable.
+  to add more dictionaries to handle the route and transfer data correctly. 
+  There was additionally a lot of trial and error with 3D printing, determining the perfect hole size for the fiber optic cables to be held snug in place, and finding the most efficient way design and assemble our map.
+  Finally, we tested the full integrated system by running the Raspberry Pi, piTFT, LED matrix, buttons, TCAT data polling, and audio announcements at the same time. Overall, testing each part separately and then testing the full system helped us make the final project more reliable.
 
 </p>
   </div>
@@ -405,7 +411,6 @@ body {font-size:16px;}
   <div class="w3-container" id="code" style="margin-top:75px">
     <h1 class="w3-xxxlarge w3-text-red"><b>Appendix.</b></h1>
     <hr style="width:50px;border:5px solid red" class="w3-round">
-    <a href="https://github.com/hn347/bigredroutes" target="_blank">Big Red Routes Github</a><br>
 
     <div class="w3-row-padding">
     <div class="w3-half w3-margin-bottom">
@@ -431,6 +436,8 @@ body {font-size:16px;}
       </ul>
     </div>
   </div>
+
+  <a href="https://github.com/hn347/bigredroutes" target="_blank">Big Red Routes Github</a>
 
   <!-- Team Contributions -->
   <div class="w3-container" id="contribution" style="margin-top:75px">
