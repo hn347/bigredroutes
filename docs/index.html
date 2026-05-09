@@ -14,7 +14,6 @@ body {font-size:16px;}
 </style>
 </head>
 <body>
-
 <!-- Sidebar/menu -->
 <nav class="w3-sidebar w3-red w3-collapse w3-top w3-large w3-padding" style="z-index:3;width:300px;font-weight:bold;" id="mySidebar"><br>
   <a href="javascript:void(0)" onclick="w3_close()" class="w3-button w3-hide-large w3-display-topleft" style="width:100%;font-size:22px">Close Menu</a>
@@ -25,8 +24,9 @@ body {font-size:16px;}
     <a href="#" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Home</a> 
     <a href="#introduction" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Introduction</a> 
     <a href="#design" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Design & Testing</a>
-    <a href="#hardware" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Hardware</a> 
-    <a href="#software" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Software</a>
+    <a href="#hardware" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white" style="padding-left:32px">- Hardware</a> 
+    <a href="#software" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white" style="padding-left:32px">- Software</a>
+    <a href="#testing" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white" style="padding-left:32px">- Testing</a>
     <a href="#results" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Results & Conclusions</a>
     <a href="#future" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Future Work</a>
     <a href="#code" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Code Appendix</a>
@@ -100,8 +100,8 @@ body {font-size:16px;}
   </div>
   
   <!-- Hardware -->
-  <div class="w3-container" id="hardware" style="margin-top:75px">
-    <h1 class="w3-xxxlarge w3-text-red"><b>Hardware.</b></h1>
+  <div class="w3-container" id="hardware" style="margin-top:40px">
+    <h3 class="w3-xlarge w3-text-red"><b>Hardware</b></h3>
     <hr style="width:50px;border:5px solid red" class="w3-round">
     <p>
       The hardware consists of a 16x32 Adafruit LED matrix, 4 buttons, an Adafruit piTFT display screen, an audio speaker, and a Raspberry Pi 4. 
@@ -269,8 +269,8 @@ body {font-size:16px;}
   </div>
 
   <!-- Software -->
-  <div class="w3-container" id="software" style="margin-top:75px">
-    <h1 class="w3-xxxlarge w3-text-red"><b>Software.</b></h1>
+  <div class="w3-container" id="software" style="margin-top:40px">
+    <h3 class="w3-xlarge w3-text-red"><b>Software</b></h3>
     <hr style="width:50px;border:5px solid red" class="w3-round">
     <p>
       Using the Raspberry Pi OS kernel 6.1.21-v8+ #1642 SMP PREEMPT, our software components include real-time TCAT bus data, piTFT GUI, 
@@ -278,71 +278,136 @@ body {font-size:16px;}
       <h4>
         TCAT API Polling
       </h4>
-      The software polls TCAT's live vehicle feed every 5 seconds to get updated bus information. We use the TCAT GTFS-realtime feed, 
-      which returns data such as the bus route, trip ID, current stop ID, vehicle ID, current status, occupancy, and timestamp. 
-      The program filters this data so we only track the routes relevant to our project. In the background, a polling loop repeatedly 
-      fetches this vehicle data and updates the current state of each bus. This lets the LED matrix and PiTFT display stay updated as 
-      buses move from stop to stop. The polling runs in its own thread so the rest of the system, like the GUI and buttons, can keep working at the same time.
+        The software polls TCAT's live vehicle feed every 5 seconds to get updated bus information. At startup, our code first calls <code class="code-red">load_gtfs_static_data()</code>, 
+      which loads the GTFS static files such as <code class="code-red">stops.txt</code>, <code class="code-red">trips.txt</code>, and <code class="code-red">stop_times.txt</code> to create 
+      dictionaries for route IDs, trip IDs, stop IDs, stop names, and directions. Then, the program repeatedly calls <code class="code-red">fetch_vehicle_feed()</code> to get the live TCAT
+      vehicle data, which returns information such as the bus route, trip ID, current stop ID, vehicle ID, current status, occupancy, and timestamp. The program filters this data so we only 
+      track the routes relevant to our project using <code class="code-red">TARGET_ROUTES</code>. It also uses <code class="code-red">normalize_direction()</code> to label each bus as inbound, 
+      outbound, or unknown, since different routes use different direction names. Finally, <code class="code-red">build_bus_snapshot()</code> combines the live bus data with the stop-to-pixel
+      map so the LED matrix and PiTFT display can show the correct bus location. This polling runs in its own thread so the rest of the system, like the GUI and buttons, can keep working at the same time.
       <h4>
         Dictionary Storage and LED Pixel Mapping
       </h4>
-      A major part of the project is storing bus stop information in dictionaries. Each route has its own dictionary that maps a TCAT stop ID to the stop name 
-      and the matching pixel location (x,y) on the LED matrix. The software combines these route dictionaries into global lookup tables. 
-      One dictionary maps each (route_id, stop_id) pair to a stop name, and another maps each (route_id, stop_id) pair to a pixel coordinate. 
-      When live TCAT data says a bus is at a certain stop, the program uses the bus's route ID and stop ID to look up the correct LED pixel. Then it lights that pixel on the matrix.
+      A major part of the project is storing bus stop information in dictionaries. Each route has its own dictionary, such as <code class="code-red">ROUTE_30_STOP_DATA</code>, <code class="code-red">ROUTE_81_STOP_DATA</code>, 
+      and <code class="code-red">ROUTE_92_STOP_DATA</code>, that maps a TCAT stop ID to the stop name and the matching pixel location <code class="code-red">(x, y)</code> on the LED matrix. The software combines these route 
+      dictionaries into <code class="code-red">ROUTE_STOP_DATA_BY_ROUTE</code>, which lets the program look up stop data based on the bus route. We also created separate dictionaries for the route-finding mode, including 
+      <code class="code-red">INBOUND_STOP_LOOKUP</code>, <code class="code-red">OUTBOUND_STOP_LOOKUP</code>, and <code class="code-red">TRANSFER_STOP_LOOKUP</code>, so the user can choose a start and end stop and the program 
+      can find possible routes or transfers. When live TCAT data says a bus is at a certain stop, the program uses the bus's route ID and stop ID to look up the correct stop name and LED pixel. Then it lights that pixel on the matrix.
       <h4>
         LED Matrix Control
       </h4>
-      The LED matrix is controlled using the rgbmatrix library. We created a BusLEDMatrix class that handles clearing the matrix, setting individual pixels, converting color values, 
-      and redrawing the display. The matrix stores active pixels in a dictionary so it knows which locations should currently be lit. 
-      Different modes use the LED matrix in different ways. In route display mode, the matrix lights up the current locations of buses on the selected route. 
-      In trip-planning mode, it can highlight a selected stop, lock in a start or end stop, and then light up the full planned route after the route is found.
+      The LED matrix is controlled using the <code class="code-red">rgbmatrix</code> library. We created a <code class="code-red">BusLEDMatrix</code> class that sets up the matrix with <code class="code-red">RGBMatrixOptions()</code>, 
+      including the number of rows and columns, brightness, GPIO slowdown, PWM bits, RGB sequence, and the <code class="code-red">adafruit-hat</code> hardware mapping. The class handles clearing the matrix with <code class="code-red">clear()</code>, 
+      setting individual pixels with <code class="code-red">set_pixel()</code>, converting color values with <code class="code-red">color_tuple()</code>, and redrawing the display with <code class="code-red">redraw_locked()</code>. The matrix stores 
+      active pixels in an <code class="code-red">active_pixels</code> dictionary so it knows which locations should currently be lit, and it uses a <code class="code-red">threading.Lock()</code> so different parts of the program do not update the matrix 
+      at the same time. Different modes use the LED matrix in different ways. In route display mode, the matrix lights up the current locations of buses on the selected route. In trip-planning mode, it can highlight a selected stop, lock in a start or end stop, 
+      and then light up the full planned route after the route is found.
       <h4>
         Audio Announcements
       </h4>
-      We added a separate AudioAnnouncer class to vocalize when buses move. When a bus arrives at a stop, the program can generate a spoken message with the route number, bus ID, stop name, and direction. 
-      The messages are placed into a queue and spoken one at a time using espeak. The audio system runs in a background thread so announcements do not freeze the rest of the program.
+      We added a separate <code class="code-red">AudioAnnouncer</code> class to say when buses move. When a bus arrives at a stop, the program uses <code class="code-red">announce_bus_arrival()</code> to generate a spoken message with the route number, bus ID, stop name,
+      and direction. This message is then passed into <code class="code-red">announce()</code>, which places it into a <code class="code-red">message_queue</code> using Python’s <code class="code-red">queue</code> library. The audio system runs in a background thread created w
+      ith <code class="code-red">threading.Thread()</code>, so announcements do not freeze the rest of the program. Inside <code class="code-red">_audio_loop()</code>, messages are taken from the queue one at a time and spoken using <code class="code-red">espeak</code> through 
+      <code class="code-red">subprocess.run()</code>. We also included <code class="code-red">set_enabled()</code> to turn announcements on or off and <code class="code-red">stop()</code> to safely stop the audio thread when the program exits.
       <h4>
         GPIO Button Control
       </h4>
-      The physical buttons are handled using the RPi.GPIO library. We used four buttons: white, green, blue, and red. Each button has a different role depending on the current screen. 
-      For example, the white button is used to select or go back, while the green, blue, and red buttons can select routes or scroll through stops. 
-      The GPIO button loop keeps track of the current screen, selected mode, selected route, trip direction, start stop, and end stop. Button presses send commands to the GUI through a 
-      queue and also send commands to the LED matrix through another queue. This keeps the button logic separate from the display logic, which makes the program easier to manage.
+      The physical buttons are handled using the <code class="code-red">RPi.GPIO</code> library. We used four buttons: white, green, blue, and red. The <code class="code-red">setup_gpio()</code> function sets these pins as inputs with pull-up resistors, and the <code class="code-red">gpio_button_loop()</code> function keeps checking for button presses. 
+      Each button has a different role depending on the current screen. For example, the white button is used to select or go back, while the green, blue, and red buttons can select routes or scroll through stops. The GPIO button loop keeps track of the <code class="code-red">current_screen</code>, selected mode, selected route, trip direction, start stop, 
+      and end stop. Button presses send commands to the GUI through <code class="code-red">screen_command_queue</code> and also send commands to the LED matrix through <code class="code-red">led_route_queue</code>. This keeps the button logic separate from the display logic, which makes the program easier to manage.
       <h4>
         Find a Route Algorithm
       </h4>
-      The “Find a Route” feature lets the user choose a starting stop and an ending stop then finds the best route between them, prioritizing the path with the fewest transfers. 
-      To do this, each bus stop is represented as a node in a graph. Stops on the same route are connected by “ride” edges, and valid transfer stops are connected by “transfer” edges.
-      The algorithm searches through possible paths from the starting stop to the ending stop. Each path is scored based on the number of transfers, number of ride steps, and total path length. 
-      The best route is the one with the lowest score, meaning it uses the fewest transfers first, then the shortest ride path if there is a tie.
-      Once the best path is found, the program returns the route segments and pixel locations. Those pixels are then lit on the LED matrix so the user can physically see the route they should take on the map.
+      The “Find a Route” feature lets the user choose a starting stop and an ending stop, then finds the best route between them by calling <code class="code-red">quick_find_from_entries()</code>, which passes the selected stops into <code class="code-red">find_best_route()</code>. To do this, each bus stop is represented as a <code class="code-red">StopNode</code> in a graph. 
+      The code uses <code class="code-red">_build_nodes_by_route()</code> to create the stop nodes and <code class="code-red">_build_graph()</code> to connect stops on the same route with “ride” edges and valid transfer stops with “transfer” edges. The algorithm searches through possible paths from the starting stop to the ending stop using <code class="code-red">_search_best_path()</code>, 
+      which uses recursive backtracking to try different route options. Each path is scored with <code class="code-red">_score()</code> based on the number of transfers, number of ride steps, and total path length. The best route is the one with the lowest score, meaning it uses the fewest transfers first, then the shortest ride path if there is a tie. Once the best path is found, the program 
+      returns the route segments and pixel locations, and those pixels are then lit on the LED matrix so the user can physically see the route they should take on the map.
       <h4>
         PiTFT GUI
       </h4>
-      The PiTFT interface is built using pygame. The GUI displays the home screen, route selection screen, trip finder screen, stop picker screens, selected trip summary, and live bus information. 
-      It also shows specific information for each active bus being displayed, such as bus status, last stop, destination, direction, and occupancy.
+      <p>
+  The PiTFT interface is built using <code class="code-red">pygame</code>. The GUI displays the home screen, route selection screen, trip finder screen, stop picker screens, selected trip summary, and live bus information using functions like <code class="code-red">draw_home_screen()</code>, <code class="code-red">draw_route_selection_screen()</code>, <code class="code-red">draw_trip_finder_screen()</code>, 
+        <code class="code-red">draw_trip_stop_picker_screen()</code>, and <code class="code-red">draw_trip_selection_summary_screen()</code>. The main <code class="code-red">pitft_screen_loop()</code> function waits for commands from <code class="code-red">screen_command_queue</code> and updates the correct screen based on the user’s button selections. It also shows specific information for each active bus 
+        being displayed by calling <code class="code-red">get_route_gui_snapshot()</code> and using <code class="code-red">draw_route_bus_screen()</code> to display the bus status, last stop, destination, direction, and occupancy. To make the route screen easier to use, <code class="code-red">choose_next_bus_id()</code> lets the user cycle through buses, while <code class="code-red">keep_selected_bus_valid()</code> 
+        makes sure the selected bus still exists when the live data updates.
     </p>
   </div>
 
+  <!-- Testing -->
+  <div class="w3-container" id="software" style="margin-top:40px">
+    <h3 class="w3-xlarge w3-text-red"><b>Testing</b></h3>
+    <hr style="width:50px;border:5px solid red" class="w3-round">
+<p>
+  For hardware testing, we printed small test pieces with different hole sizes to see which size worked best for the fiber optic cables. We tested holes created in Figma as well as holes created in Fusion, since we realized the sizing was different because Figma uses pixel-based sizing while Fusion uses regular units like millimeters. 
+  For the LED matrix, we tested our wiring and GPIO connections using online test code to make sure the matrix was working correctly. We had issues with the LED matrix blinking, flashing, and sometimes not working, and the test code helped us figure out that the issue was with the LED matrix itself rather than our code. We ended up replacing the matrix. 
+  For the piTFT, we integrated previous piTFT code from Lab 3 to make sure it could work at the same time as the LED matrix.
+</p>
 
+<p>
+  For software testing, we added print statements in different parts of the code to check if the TCAT scraping data was accurate, if the buttons were being detected, if the piTFT was updating, if certain threads were running, and if the audio was working. 
+  This was extremely helpful because it let us see whether the system was responding correctly to user input and whether the overall program was behaving as expected. For the Find a Route algorithm, we tested many different starting and ending stops to see if the system 
+  handled bus transfers correctly and chose the correct path. Through this testing, we realized that we needed separate inbound and outbound modes so a user would not be able to choose a route that went backwards from their selected stop. We also realized that we needed 
+  to add more dictionaries to handle the route and transfer data correctly. Finally, we tested the full integrated system by running the Raspberry Pi, piTFT, LED matrix, buttons, TCAT data polling, and audio announcements at the same time. Overall, testing each part separately and then testing the full system helped us make the final project more reliable.
+
+</p>
+  </div>
   <!-- Results and Conclusions -->
   <div class="w3-container" id="results" style="margin-top:75px">
     <h1 class="w3-xxxlarge w3-text-red"><b>Results & Conclusions.</b></h1>
     <hr style="width:50px;border:5px solid red" class="w3-round">
     <p>
-      Evaluate your outcomes:
-      - Did your project perform as intended?
-      - Did you meet your original goals and specifications?
+      The project performed as intended because the final system was able to display real-time TCAT bus information on the physical 3D-printed map using LEDs. 
+      It met the original goals from our project proposal by tracking buses for selected TCAT routes and showing their locations in an interactive way. 
+      We also went beyond the original proposal by adding extra features, including GPIO button controls, a “Find a Route” mode, and audio announcements. 
+      Most of the changes we made were not major changes to the project idea, but improvements that built on the original concept and made the system more useful and interactive. 
+      The only main adjustment was changing some of the routes we decided to use, but the overall purpose of the project stayed the same.
+    </p>
+      One aspect that worked well was that the hardware and software worked together successfully. 
+      The Raspberry Pi, piTFT screen, LED matrix, buttons, and fiber optic cables were able to be connected into one working system. 
+      The real-time bus data is updated about every 10 seconds, and the button controls felt responsive because the button polling was fast with a small debounce delay.
+      The 3D-printed map and fiber optic cable setup also worked well after testing different designs and hole sizes. 
+      Another part that worked well was organizing the code into separate files, such as files for the GUI, LED matrix, bus tracking, button controls, audio, and route data. 
+      This made the project easier to manage compared to having everything in one large file.
+    <p>
+      <p>
+        Some parts did not work as expected at first and required troubleshooting. The touchscreen was not very responsive, so we decided that using physical GPIO buttons was more reliable for user interaction. 
+        Route 92 also caused issues because it does not always have live data during the day, so we had to account for that by using recorded data when live data was unavailable. 
+        The “Find a Route” feature was also challenging because we had to manually create new stop dictionaries and test different route combinations. 
+        Since the dictionaries were made by hand, we found that some stops that were both inbound and outbound stops were missing and had to be fixed. 
+        Overall, the main challenges came from combining many different parts of the system, but most of them were solved through testing, debugging, and refining the design.
+      </p>
+      
+    </p>
+  </div>
 
-      Summarize key takeaways:
-      - What worked well?
-      - What did not work as expected, and why?
+  <!-- Future Work -->
+  <div class="w3-container" id="future" style="margin-top:75px">
+    <h1 class="w3-xxxlarge w3-text-red"><b>Future Work.</b></h1>
+    <hr style="width:50px;border:5px solid red" class="w3-round">
+    <p>
+      With additional time and resources, we could improve the project by adding more TCAT routes so the map would be useful for more students and Ithaca residents. 
+      Right now, the project focuses on routes 30, 81, and 92, but adding more routes would make the system feel more complete. With more routes, this would also be a good opportunity to optimize our code. Instead of using lists of dictionaries, we could improve our code by using methods like classes for our bus data. 
+      We could also add labels to the physical map, such as major Cornell buildings, Collegetown, the Commons, and other recognizable locations, so users could understand the map more quickly without needing to already know the stop names.
+    </p>
+    <p>
+      Another improvement would be making the “Find a Route” feature more advanced. Currently, it helps users choose a route based on the starting and ending stops, but with more time, we could connect this mode to the real-time TCAT data. 
+      This would allow the system to show estimated arrival times, whether a bus is currently nearby, and whether walking might be faster than waiting for the bus. 
+      This would make the feature more practical for real use instead of only showing the possible route path.
+    </p>
+    <p>
+      We could also improve the user interface on the piTFT screen. Since the touchscreen was not as reliable, we used physical buttons, which worked better. However, the interface could be made more intuitive by using fewer words, clearer menus, and more visual icons. 
+      This would make it easier for users to navigate the system quickly. The audio announcements could also be improved by using a smoother and more natural-sounding voice, similar to Siri, so the bus information is easier to understand.
     </p>
     
   </div>
 
-  <div class="w3-row-padding">
+  <!-- Appendix -->
+  <div class="w3-container" id="code" style="margin-top:75px">
+    <h1 class="w3-xxxlarge w3-text-red"><b>Appendix.</b></h1>
+    <hr style="width:50px;border:5px solid red" class="w3-round">
+    <a href="https://github.com/hn347/bigredroutes" target="_blank">Big Red Routes Github</a>
+
+      <div class="w3-row-padding">
     <div class="w3-half w3-margin-bottom">
       <ul class="w3-ul w3-light-grey w3-center">
         <li class="w3-dark-grey w3-xlarge w3-padding-32">Parts List</li>
@@ -367,30 +432,14 @@ body {font-size:16px;}
     </div>
   </div>
 
-  <!-- Future Work -->
-  <div class="w3-container" id="future" style="margin-top:75px">
-    <h1 class="w3-xxxlarge w3-text-red"><b>Future Work.</b></h1>
-    <hr style="width:50px;border:5px solid red" class="w3-round">
-    <p>
-      Discuss possible extensions or improvements if you had additional time or resources.
-    </p>
-    
-  </div>
-
-  <!-- Code Appendix -->
-  <div class="w3-container" id="code" style="margin-top:75px">
-    <h1 class="w3-xxxlarge w3-text-red"><b>Code Appendix.</b></h1>
-    <hr style="width:50px;border:5px solid red" class="w3-round">
-    <a href="https://github.com/hn347/bigredroutes" target="_blank">Big Red Routes Github</a>
-    
-  </div>
-
   <!-- Team Contributions -->
   <div class="w3-container" id="contribution" style="margin-top:75px">
     <h1 class="w3-xxxlarge w3-text-red"><b>Team Contributions.</b></h1>
     <hr style="width:50px;border:5px solid red" class="w3-round">
     <p>
-      poo
+      Both team members contributed to the design, hardware, software, testing, and integration of Big Red Routes. For the physical map design, Selena worked on tracing the map vectors and creating the SVG file, while Helen imported the design into Fusion, extruded the map, and made sure the parts were ready for 3D printing. 
+      After that, the rest of the project was completed collaboratively. We worked together on wiring the LED matrix, buttons, speaker, Raspberry Pi, and piTFT, as well as testing the fiber optic light transfer and assembling the physical map.
+      On the software side, we worked together to organize the code, connect the TCAT data to the LED matrix, build the piTFT interface, implement the GPIO button controls, add audio announcements, and develop the Find a Route feature. We also debugged issues together, including touchscreen problems, route data errors, Route 92 data limitations, and hardware/software integration.
     </p>
     
   </div>
