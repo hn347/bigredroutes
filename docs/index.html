@@ -33,6 +33,7 @@ table th {
     <a href="#design" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Design & Testing</a>
     <a href="#hardware" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white" style="padding-left:32px">- Hardware</a> 
     <a href="#software" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white" style="padding-left:32px">- Software</a>
+    <a href="#testing" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white" style="padding-left:32px">- Testing</a>
     <a href="#results" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Results & Conclusions</a>
     <a href="#future" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Future Work</a>
     <a href="#code" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Code Appendix</a>
@@ -339,7 +340,24 @@ table th {
     </p>
   </div>
 
+  <!-- Testing -->
+  <div class="w3-container" id="software" style="margin-top:40px">
+    <h3 class="w3-xlarge w3-text-red"><b>Testing</b></h3>
+    <hr style="width:50px;border:5px solid red" class="w3-round">
+<p>
+  For hardware testing, we printed small test pieces with different hole sizes to see which size worked best for the fiber optic cables. We tested holes created in Figma as well as holes created in Fusion, since we realized the sizing was different because Figma uses pixel-based sizing while Fusion uses regular units like millimeters. 
+  For the LED matrix, we tested our wiring and GPIO connections using online test code to make sure the matrix was working correctly. We had issues with the LED matrix blinking, flashing, and sometimes not working, and the test code helped us figure out that the issue was with the LED matrix itself rather than our code. We ended up replacing the matrix. 
+  For the piTFT, we integrated previous piTFT code from Lab 3 to make sure it could work at the same time as the LED matrix.
+</p>
 
+<p>
+  For software testing, we added print statements in different parts of the code to check if the TCAT scraping data was accurate, if the buttons were being detected, if the piTFT was updating, if certain threads were running, and if the audio was working. 
+  This was extremely helpful because it let us see whether the system was responding correctly to user input and whether the overall program was behaving as expected. For the Find a Route algorithm, we tested many different starting and ending stops to see if the system 
+  handled bus transfers correctly and chose the correct path. Through this testing, we realized that we needed separate inbound and outbound modes so a user would not be able to choose a route that went backwards from their selected stop. We also realized that we needed 
+  to add more dictionaries to handle the route and transfer data correctly. Finally, we tested the full integrated system by running the Raspberry Pi, piTFT, LED matrix, buttons, TCAT data polling, and audio announcements at the same time. Overall, testing each part separately and then testing the full system helped us make the final project more reliable.
+
+</p>
+  </div>
   <!-- Results and Conclusions -->
   <div class="w3-container" id="results" style="margin-top:75px">
     <h1 class="w3-xxxlarge w3-text-red"><b>Results & Conclusions.</b></h1>
