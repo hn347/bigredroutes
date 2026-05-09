@@ -341,21 +341,26 @@ body {font-size:16px;}
   <div class="w3-container" id="testing" style="margin-top:40px">
     <h3 class="w3-xlarge w3-text-red"><b>Testing</b></h3>
     <hr style="width:50px;border:5px solid red" class="w3-round">
-<p>
-  For hardware testing, we printed small test pieces with different hole sizes to see which size worked best for the fiber optic cables. We tested holes created in Figma as well as holes created in Fusion, since we realized the sizing was different because Figma uses pixel-based sizing while Fusion uses regular units like millimeters. 
-  For the LED matrix, we tested our wiring and GPIO connections using online test code to make sure the matrix was working correctly. We had issues with the LED matrix blinking, flashing, and sometimes not working, and the test code helped us figure out that the issue was with the LED matrix itself rather than our code. We ended up replacing the matrix. 
-  For the piTFT, we integrated previous piTFT code from Lab 3 to make sure it could work at the same time as the LED matrix.
-</p>
+    <p>
+      For hardware testing, we printed small test pieces with different hole sizes to see which size worked best for the fiber optic cables. We tested holes created in Figma as well as holes created in Fusion, since we realized the sizing was different because Figma uses pixel-based sizing while Fusion uses regular units like millimeters. 
+      For the LED matrix, we tested our wiring and GPIO connections using online test code to make sure the matrix was working correctly. We had issues with the LED matrix blinking, flashing, and sometimes not working, and the test code helped us figure out that the issue was with the LED matrix itself rather than our code. We ended up replacing the matrix. 
+      For the piTFT, we integrated previous piTFT code from Lab 3 to make sure it could work at the same time as the LED matrix.
+    </p>
 
-<p>
-  For software testing, we added print statements in different parts of the code to check if the TCAT scraping data was accurate, if the buttons were being detected, if the piTFT was updating, if certain threads were running, and if the audio was working. 
-  This was extremely helpful because it let us see whether the system was responding correctly to user input and whether the overall program was behaving as expected. For the Find a Route algorithm, we tested many different starting and ending stops to see if the system 
-  handled bus transfers correctly and chose the correct path. Through this testing, we realized that we needed separate inbound and outbound modes so a user would not be able to choose a route that went backwards from their selected stop. We also realized that we needed 
-  to add more dictionaries to handle the route and transfer data correctly. 
-  There was additionally a lot of trial and error with 3D printing, determining the perfect hole size for the fiber optic cables to be held snug in place, and finding the most efficient way design and assemble our map.
-  Finally, we tested the full integrated system by running the Raspberry Pi, piTFT, LED matrix, buttons, TCAT data polling, and audio announcements at the same time. Overall, testing each part separately and then testing the full system helped us make the final project more reliable.
+    <p>
+      For software testing, we added print statements in different parts of the code to check if the TCAT scraping data was accurate, if the buttons were being detected, if the piTFT was updating, if certain threads were running, and if the audio was working. 
+      This was extremely helpful because it let us see whether the system was responding correctly to user input and whether the overall program was behaving as expected. For the Find a Route algorithm, we tested many different starting and ending stops to see if the system 
+      handled bus transfers correctly and chose the correct path. Through this testing, we realized that we needed separate inbound and outbound modes so a user would not be able to choose a route that went backwards from their selected stop. We also realized that we needed 
+      to add more dictionaries to handle the route and transfer data correctly.
+      Finally, we tested the full integrated system by running the Raspberry Pi, piTFT, LED matrix, buttons, TCAT data polling, and audio announcements at the same time. Overall, testing each part separately and then testing the full system helped us make the final project more reliable.
+    </p>
 
-</p>
+    <p>
+      After all our functionalities were behaving correctly, the last step was so make our program run at startup so that we don't need to log in and manually run the system. 
+      To do this, we add a call to <code class="code-red">main.py</code> in our <code class="code-red">.bashrc</code> file, specifically <code class="code-red">sudo python /home/hi/final_project/Raspberry-Pi-Testing/main.py</code>. We tested this by rebooting the system and logging in, after which 
+      our program should automatically run. Then to configure the RPi to start without logging in, we use the command <code class="code-red">sudo raspi-config</code> and select a 'Console Autologin' setting. With one final test run, our main program ran at power-up.
+    </p>
+
   </div>
   <!-- Results and Conclusions -->
   <div class="w3-container" id="results" style="margin-top:75px">
@@ -384,6 +389,33 @@ body {font-size:16px;}
       </p>
       
     </p>
+  </div>
+
+  <div class="w3-row-padding"></div>
+    <div class="w3-col m4 w3-margin-bottom">
+      <div class="w3-light-grey">
+        <img src="img/back_view.jpeg" alt="backview" style="width:100%">
+        <div class="w3-container">
+          <p class="w3-opacity">back view of final setup</p>
+        </div>
+      </div>
+    </div>
+    <div class="w3-col m4 w3-margin-bottom">
+      <div class="w3-light-grey">
+        <img src="img/start_screen.jpeg" alt="startscreen" style="width:100%">
+        <div class="w3-container">
+          <p class="w3-opacity">pitft start screen</p>
+        </div>
+      </div>
+    </div>
+    <div class="w3-col m4 w3-margin-bottom">
+      <div class="w3-light-grey">
+        <img src="img/final_map.jpeg" alt="finalmap" style="width:100%">
+        <div class="w3-container">
+          <p class="w3-opacity">final map design</p>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Future Work -->
