@@ -330,7 +330,7 @@ body {font-size:16px;}
         PiTFT GUI
       </h4>
       <p>
-  The PiTFT interface is built using <code class="code-red">pygame</code>. The GUI displays the home screen, route selection screen, trip finder screen, stop picker screens, selected trip summary, and live bus information using functions like <code class="code-red">draw_home_screen()</code>, <code class="code-red">draw_route_selection_screen()</code>, <code class="code-red">draw_trip_finder_screen()</code>, 
+        The PiTFT interface is built using <code class="code-red">pygame</code>. The GUI displays the home screen, route selection screen, trip finder screen, stop picker screens, selected trip summary, and live bus information using functions like <code class="code-red">draw_home_screen()</code>, <code class="code-red">draw_route_selection_screen()</code>, <code class="code-red">draw_trip_finder_screen()</code>, 
         <code class="code-red">draw_trip_stop_picker_screen()</code>, and <code class="code-red">draw_trip_selection_summary_screen()</code>. The main <code class="code-red">pitft_screen_loop()</code> function waits for commands from <code class="code-red">screen_command_queue</code> and updates the correct screen based on the user’s button selections. It also shows specific information for each active bus 
         being displayed by calling <code class="code-red">get_route_gui_snapshot()</code> and using <code class="code-red">draw_route_bus_screen()</code> to display the bus status, last stop, destination, direction, and occupancy. To make the route screen easier to use, <code class="code-red">choose_next_bus_id()</code> lets the user cycle through buses, while <code class="code-red">keep_selected_bus_valid()</code> 
         makes sure the selected bus still exists when the live data updates.
@@ -362,6 +362,7 @@ body {font-size:16px;}
     </p>
 
   </div>
+
   <!-- Results and Conclusions -->
   <div class="w3-container" id="results" style="margin-top:75px">
     <h1 class="w3-xxxlarge w3-text-red"><b>Results & Conclusions.</b></h1>
@@ -391,7 +392,7 @@ body {font-size:16px;}
     </p>
   </div>
 
-  <div class="w3-row-padding"></div>
+  <div class="w3-row-padding">
     <div class="w3-col m4 w3-margin-bottom">
       <div class="w3-light-grey">
         <img src="img/back_view.jpeg" alt="backview" style="width:100%">
