@@ -54,7 +54,7 @@
       <div class="shell content-grid">
         <div>
           <p class="kicker">Overview</p>
-          <h2>Transit information you can see and touch.</h2>
+          <h2>Interactive transit information.</h2>
         </div>
         <div class="prose">
           <p>Big Red Routes is an interactive TCAT (Tompkins Consolidated Area Transit) bus tracker for the Cornell and Ithaca community. It turns bus location data for Routes 30, 81, and 92 into an interactive, 3D-printed map rather than a conventional screen-only map. The initial concept was inspired by a Manhattan subway-map project.</p>
@@ -225,7 +225,6 @@
           <p class="kicker">Project team</p>
           <h2>Contributions</h2>
           <p>Both team members contributed to design, hardware, software, testing, and integration. Selena traced the map vectors and created the SVG; Helen imported the design into Fusion, extruded the map, and prepared the parts for printing. The remaining assembly, wiring, TCAT integration, interface work, routing feature, and debugging were completed collaboratively: this included the LED matrix, buttons, speaker, Raspberry Pi, PiTFT, fiber-optic testing, physical-map assembly, and the touchscreen, Route 92, route-data, and hardware/software integration issues.</p>
-          <figure class="team-photo"><img class="project-image" src="img/team.jpeg" alt="Selena Zhang and Helen Ni presenting Big Red Routes with its physical map, laptop display, and speaker." width="3023" height="3023"><figcaption>Selena Zhang and Helen Ni presenting the project.</figcaption></figure>
           <h3>Parts and references</h3>
           <ul class="link-list">
             <li><a href="https://www.amazon.com/dp/B09TXMQNBY?th=1" target="_blank" rel="noopener noreferrer">Fiber-optic cable</a></li>
@@ -244,7 +243,7 @@
           <p class="kicker">Results and future work</p>
           <h2>Integrated system result</h2>
           <p>The final system displayed real-time TCAT information on the 3D-printed map for the selected routes. It added GPIO controls, Find a Route, and audio announcements to the original tracking concept. The main change during development was the selected routes; the project’s physical transit-display purpose remained the same. Separating the GUI, LED matrix, bus tracking, buttons, audio, and route data into different files made the integrated system easier to manage.</p>
-          <p>With additional time, the project could add more TCAT routes and labels for major Cornell locations, use classes rather than lists of dictionaries for bus data, and connect trip planning to live arrival times, nearby buses, and walking-versus-waiting information. The PiTFT menus could use fewer words and more icons, and the audio voice could be made smoother and more natural.</p>
+          <p>With additional time, the project could add more TCAT routes and labels for major Cornell locations, use classes rather than lists of dictionaries for bus data, and connect trip planning to live arrival times, nearby buses, and walking vs waiting information. The PiTFT menus could use fewer words and more icons, and the audio voice could be made smoother and more natural.</p>
         </article>
       </div>
     </section>
@@ -266,7 +265,7 @@
           <p class="kicker">Gallery</p>
           <h2>Final assembly and project presentation.</h2>
         </div>
-        <div class="photo-row">
+        <div class="photo-row gallery-photo-row">
           <figure><img class="project-image" src="img/final_map.jpeg" alt="Angled view of the assembled 3D-printed Big Red Routes transit map." width="3997" height="2998"><figcaption>Final map assembly.</figcaption></figure>
           <figure><img class="project-image" src="img/back_view.jpeg" alt="Back view of the map with PiTFT, Raspberry Pi, fiber optics, and wiring visible underneath." width="4897" height="3674"><figcaption>Back view of the assembled system.</figcaption></figure>
           <figure><img class="project-image" src="img/start_screen.jpeg" alt="PiTFT display showing the Big Red Routes start screen." width="4032" height="3024"><figcaption>PiTFT start screen.</figcaption></figure>
