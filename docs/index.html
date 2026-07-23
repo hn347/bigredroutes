@@ -23,7 +23,7 @@
         <a href="#architecture">Architecture</a>
         <a href="#hardware">Hardware</a>
         <a href="#software">Software</a>
-        <a href="#decisions">Engineering decisions</a>
+        <a href="#decisions">Engineering Decisions</a>
         <a href="#demo">Demo</a>
         <a href="#gallery">Gallery</a>
       </nav>
@@ -32,16 +32,21 @@
 
   <main id="main-content">
     <section id="top" class="hero">
-      <div class="shell narrow">
-        <p class="kicker">Cornell ECE 5725 · Design with Embedded Operating Systems</p>
-        <h1>Big Red Routes</h1>
-        <p class="hero-summary">A Raspberry Pi–based physical TCAT bus tracker that uses live transit data to illuminate a 3D-printed map of Cornell and Ithaca routes.</p>
-        <div class="actions" aria-label="Project links">
-          <a class="button button-primary" href="https://github.com/hn347/bigredroutes" target="_blank" rel="noopener noreferrer">GitHub</a>
-          <a class="button" href="#demo">Demo video</a>
-          <a class="button" href="#overview">Project report</a>
+      <div class="shell hero-layout">
+        <div class="hero-content">
+          <p class="kicker">Cornell ECE 5725 · Design with Embedded Operating Systems</p>
+          <h1>Big Red Routes</h1>
+          <p class="hero-summary">A Raspberry Pi–based physical TCAT bus tracker that uses live transit data to illuminate a 3D-printed map of Cornell and Ithaca routes.</p>
+          <div class="actions" aria-label="Project links">
+            <a class="button button-primary" href="https://github.com/hn347/bigredroutes" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a class="button" href="#demo">Demo video</a>
+            <a class="button" href="#overview">Project report</a>
+          </div>
+          <p class="byline">Selena Zhang and Helen Ni · <time datetime="2026-05-09">May 9, 2026</time></p>
         </div>
-        <p class="byline">Selena Zhang and Helen Ni · <time datetime="2026-05-09">May 9, 2026</time></p>
+        <figure class="hero-photo">
+          <img src="img/team2.webp" alt="Selena Zhang and Helen Ni with the Big Red Routes physical transit map." width="3023" height="3023">
+        </figure>
       </div>
     </section>
 
@@ -49,7 +54,7 @@
       <div class="shell content-grid">
         <div>
           <p class="kicker">Overview</p>
-          <h2>Physical transit information, not just a screen.</h2>
+          <h2>Interactive transit information.</h2>
         </div>
         <div class="prose">
           <p>Big Red Routes is an interactive TCAT (Tompkins Consolidated Area Transit) bus tracker for the Cornell and Ithaca community. It turns bus location data for Routes 30, 81, and 92 into an interactive, 3D-printed map rather than a conventional screen-only map. The initial concept was inspired by a Manhattan subway-map project.</p>
@@ -60,9 +65,9 @@
 
     <section id="architecture" class="section">
       <div class="shell">
-        <div class="section-heading">
+        <div class="section-heading section-heading-wide">
           <p class="kicker">System architecture</p>
-          <h2>From transit feed to physical map.</h2>
+          <h2>From live transit data to a physical map.</h2>
           <p>Network polling, physical input, display rendering, LED updates, and spoken announcements are handled as separate activities so slower work does not block interaction.</p>
         </div>
 
@@ -99,7 +104,7 @@
           </section>
         </div>
 
-        <div class="architecture-notes prose">
+        <div class="architecture-notes prose full-width-copy">
           <p><code>(route_id, stop_id)</code> keys connect a vehicle’s current stop to a stop name and a physical LED coordinate. GPIO publishes separate screen and LED commands, the matrix uses a <code>threading.Lock</code>, and the GUI reads copied route snapshots. If Route 92 is selected but absent from the live feed, replay records are translated into the same bus shape used by the live path.</p>
         </div>
       </div>
@@ -107,17 +112,17 @@
 
     <section id="hardware" class="section">
       <div class="shell">
-        <div class="section-heading">
+        <div class="section-heading section-heading-wide">
           <p class="kicker">Hardware</p>
           <h2>3D-printed map, fiber optics, and a Raspberry Pi display stack.</h2>
         </div>
 
-        <div class="hardware-copy prose">
+        <div class="hardware-copy prose full-width-copy">
           <p>The 12 × 21 inch Ithaca map was hand-traced in Figma using vectors, exported as SVG, and imported into Fusion for extrusion, color, and 3D printing. It was printed as six puzzle-like pieces and elevated by eight printed pillars, leaving room below for the LED matrix, fiber-optic cables, and electrical wiring.</p>
           <p>The hardware consists of a Raspberry Pi 4, a 16 × 32 Adafruit RGB LED matrix, a PiTFT 2.8 inch display, four external buttons, and a speaker. The Pi and PiTFT are mounted on one corner of the map. Green light denotes outbound travel (north to south); red light denotes inbound travel (south to north).</p>
         </div>
 
-        <div class="photo-row" aria-label="Hardware photographs">
+        <div class="photo-row hardware-photo-row" aria-label="Hardware photographs">
           <figure><img class="project-image" src="img/hw1.jpeg" alt="Fiber-optic strands protruding from stop locations on the printed map while testing light transfer." width="4032" height="3024"><figcaption>Testing light transfer through the map.</figcaption></figure>
           <figure><img class="project-image" src="img/hw2.jpeg" alt="RGB matrix, ribbon cable, breadboard, resistors, and wiring used in the electrical assembly." width="4032" height="3024"><figcaption>Electrical wiring for the matrix and controls.</figcaption></figure>
           <figure><img class="project-image" src="img/hw3.jpeg" alt="Underside of the map with many fiber-optic strands routed to the LED matrix." width="4032" height="3024"><figcaption>Map underside and fiber routing.</figcaption></figure>
@@ -205,28 +210,21 @@
         </div>
 
         <ol class="decision-list">
-          <li><h3>Keep input responsive while data and audio run.</h3><p><code>bus_poll_loop()</code>, <code>gpio_button_loop()</code>, the PiTFT loop, and <code>AudioAnnouncer</code> have separate responsibilities. GPIO sends commands through screen and LED queues; the matrix uses a lock, and audio uses its own queue and thread so speech does not freeze the rest of the system.</p></li>
-          <li><h3>Integrate the PiTFT and LED matrix around GPIO constraints.</h3><p>PiTFT code from a previous Lab 3 exercise was integrated with the matrix. The touchscreen was not responsive enough for the intended interaction, so physical GPIO buttons became the primary control path. Because the matrix conflicts with the Pi’s built-in button pins, four external buttons were wired to free GPIO pins.</p></li>
-          <li><h3>Join static and live transit data.</h3><p>The application loads static GTFS metadata at startup and polls the GTFS-Realtime vehicle feed every 10 seconds. Route-specific direction normalization handles differing headsigns. Route 92 does not always have live data during the day, so recorded snapshots are replayed when the selected live feed is empty.</p></li>
-          <li><h3>Model direction and transfers explicitly.</h3><p>Testing many start/end combinations showed that inbound and outbound stop data needed to be separate so users could not select a backward path. Additional stop and transfer dictionaries were added to correct missing directional cases and constrain valid transfers.</p></li>
-          <li><h3>Test the hardware and the integrated system.</h3><p>Printed test pieces compared fiber-hole sizes in Figma and Fusion. Independent matrix test code isolated blinking and flashing to the matrix hardware rather than application code, leading to a replacement panel. Print statements checked transit records, buttons, PiTFT updates, threads, and audio before the Pi, display, matrix, buttons, polling, and speaker were tested together. The team also tested power-up through a <code>.bashrc</code> invocation of <code>main.py</code> and Raspberry Pi Console Autologin.</p></li>
+          <li><h3>Input remains responsive while data and audio run.</h3><p><code>bus_poll_loop()</code>, <code>gpio_button_loop()</code>, the PiTFT loop, and <code>AudioAnnouncer</code> have separate responsibilities. GPIO sends commands through screen and LED queues; the matrix uses a lock, and audio uses its own queue and thread so speech does not freeze the rest of the system.</p></li>
+          <li><h3>The PiTFT and LED matrix work within GPIO constraints.</h3><p>PiTFT code from a previous Lab 3 exercise was integrated with the matrix. The touchscreen was not responsive enough for the intended interaction, so physical GPIO buttons became the primary control path. Because the matrix conflicts with the Pi’s built-in button pins, four external buttons were wired to free GPIO pins.</p></li>
+          <li><h3>Static and live transit data are joined.</h3><p>The application loads static GTFS metadata at startup and polls the GTFS-Realtime vehicle feed every 10 seconds. Route-specific direction normalization handles differing headsigns. Route 92 does not always have live data during the day, so recorded snapshots are replayed when the selected live feed is empty.</p></li>
+          <li><h3>Direction and transfers are modeled explicitly.</h3><p>Testing many start/end combinations showed that inbound and outbound stop data needed to be separate so users could not select a backward path. Additional stop and transfer dictionaries were added to correct missing directional cases and constrain valid transfers.</p></li>
+          <li><h3>The hardware and integrated system are tested.</h3><p>Printed test pieces compared fiber-hole sizes in Figma and Fusion. Independent matrix test code isolated blinking and flashing to the matrix hardware rather than application code, leading to a replacement panel. Print statements checked transit records, buttons, PiTFT updates, threads, and audio before the Pi, display, matrix, buttons, polling, and speaker were tested together. The team also tested power-up through a <code>.bashrc</code> invocation of <code>main.py</code> and Raspberry Pi Console Autologin.</p></li>
         </ol>
       </div>
     </section>
 
     <section id="notes" class="section">
       <div class="shell notes-grid">
-        <article class="prose">
-          <p class="kicker">Results and future work</p>
-          <h2>Integrated system result</h2>
-          <p>The final system displayed real-time TCAT information on the 3D-printed map for the selected routes. It added GPIO controls, Find a Route, and audio announcements to the original tracking concept. The main change during development was the selected routes; the project’s physical transit-display purpose remained the same. Separating the GUI, LED matrix, bus tracking, buttons, audio, and route data into different files made the integrated system easier to manage.</p>
-          <p>With additional time, the project could add more TCAT routes and labels for major Cornell locations, use classes rather than lists of dictionaries for bus data, and connect trip planning to live arrival times, nearby buses, and walking-versus-waiting information. The PiTFT menus could use fewer words and more icons, and the audio voice could be made smoother and more natural.</p>
-        </article>
         <article>
           <p class="kicker">Project team</p>
           <h2>Contributions</h2>
           <p>Both team members contributed to design, hardware, software, testing, and integration. Selena traced the map vectors and created the SVG; Helen imported the design into Fusion, extruded the map, and prepared the parts for printing. The remaining assembly, wiring, TCAT integration, interface work, routing feature, and debugging were completed collaboratively: this included the LED matrix, buttons, speaker, Raspberry Pi, PiTFT, fiber-optic testing, physical-map assembly, and the touchscreen, Route 92, route-data, and hardware/software integration issues.</p>
-          <figure class="team-photo"><img class="project-image" src="img/team.jpeg" alt="Selena Zhang and Helen Ni presenting Big Red Routes with its physical map, laptop display, and speaker." width="3023" height="3023"><figcaption>Selena Zhang and Helen Ni presenting the project.</figcaption></figure>
           <h3>Parts and references</h3>
           <ul class="link-list">
             <li><a href="https://www.amazon.com/dp/B09TXMQNBY?th=1" target="_blank" rel="noopener noreferrer">Fiber-optic cable</a></li>
@@ -240,6 +238,12 @@
             <li><a href="https://cdn-learn.adafruit.com/downloads/pdf/connecting-a-16x32-rgb-led-matrix-panel-to-a-raspberry-pi.pdf" target="_blank" rel="noopener noreferrer">LED matrix to Raspberry Pi guide</a></li>
             <li><a href="https://courses.ece.cornell.edu/ece5990/ECE5725_Fall2023_Projects/2%20Wednesday%20December%206/1%20Live%20Scoreboard/M_tjb/report.html" target="_blank" rel="noopener noreferrer">LED matrix scoreboard project</a></li>
           </ul>
+        </article>
+        <article class="prose">
+          <p class="kicker">Results and future work</p>
+          <h2>Integrated system result</h2>
+          <p>The final system displayed real-time TCAT information on the 3D-printed map for the selected routes. It added GPIO controls, Find a Route, and audio announcements to the original tracking concept. The main change during development was the selected routes; the project’s physical transit-display purpose remained the same. Separating the GUI, LED matrix, bus tracking, buttons, audio, and route data into different files made the integrated system easier to manage.</p>
+          <p>With additional time, the project could add more TCAT routes and labels for major Cornell locations, use classes rather than lists of dictionaries for bus data, and connect trip planning to live arrival times, nearby buses, and walking vs waiting information. The PiTFT menus could use fewer words and more icons, and the audio voice could be made smoother and more natural.</p>
         </article>
       </div>
     </section>
@@ -261,7 +265,7 @@
           <p class="kicker">Gallery</p>
           <h2>Final assembly and project presentation.</h2>
         </div>
-        <div class="photo-row">
+        <div class="photo-row gallery-photo-row">
           <figure><img class="project-image" src="img/final_map.jpeg" alt="Angled view of the assembled 3D-printed Big Red Routes transit map." width="3997" height="2998"><figcaption>Final map assembly.</figcaption></figure>
           <figure><img class="project-image" src="img/back_view.jpeg" alt="Back view of the map with PiTFT, Raspberry Pi, fiber optics, and wiring visible underneath." width="4897" height="3674"><figcaption>Back view of the assembled system.</figcaption></figure>
           <figure><img class="project-image" src="img/start_screen.jpeg" alt="PiTFT display showing the Big Red Routes start screen." width="4032" height="3024"><figcaption>PiTFT start screen.</figcaption></figure>
